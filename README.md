@@ -1,31 +1,35 @@
 # Unity-Machine-Learning-Agent
 This represents how to make a machine learning agent in Unity while collecting data through a python virtual environment
+
 The first step you want to do is make sure you have python and Unity on your device. 
 Then you will want to create a new unity project in the Unity app. 
 Once you save the project you can go and minimize Unity. 
-You will then want to open command prompt and change directory to wherever you want to save your files. Putting it with the Unity project would be the easiest
-Changing directory: cd (copy and paste the path in the file explorer of where you want to save your files)
-After you've changed directories, you will then want to create a python virtual environment. You accomplish this by typing: py -m venv venv
-This creates the virtual environment wherever you changed your directory to and if you check the file explorer, you should see a venv folder
-Activating the virtual environment will be the next step. You can do this by typing: venv\Scripts\activate
+
+You will then want to open command prompt and change directory to wherever you want to save your files. Putting it with the Unity project would be the easiest. 
+Changing directory: cd (copy and paste the path in the file explorer of where you want to save your files).
+After you've changed directories, you will then want to create a python virtual environment. You accomplish this by typing: py -m venv venv .
+This creates the virtual environment wherever you changed your directory to and if you check the file explorer, you should see a venv folder. 
+Activating the virtual environment will be the next step. You can do this by typing: venv\Scripts\activate .
 You will be in the virtual environment at this point and you will want to make sure that your installer is properly upgraded: python -m pip install --upgrade pip
 At this point, you're installer should be upgraded. 
-The next step will be to install pytorch, which provides machine learning and neural network access
-pytorch installation: pip install torch=1.13.0 -f https://download.pytorch.org/whl/torch_stable.html
-You should change the "torch=" to whatever the latest stable version of Pytorch is. 
-After this, you can download mlagents: pip install mlagents
-Mlagents should be installed at this point, but you can make sure it is downloaded by typing: mlagents-learn --help
 
-You will want to then open up Unity again. and go to window and open the package manager. In the top of the package manager, click on packages and go to Unity Registry. Scroll down until you find mlagents and install the pacakge
+The next step will be to install pytorch, which provides machine learning and neural network access.
+pytorch installation: pip install torch=1.13.0 -f https://download.pytorch.org/whl/torch_stable.html .
+You should change the "torch=" to whatever the latest stable version of Pytorch is. 
+After this, you can download mlagents: pip install mlagents. 
+Mlagents should be installed at this point, but you can make sure it is downloaded by typing: mlagents-learn --help .
+
+You will want to then open up Unity again. and go to window and open the package manager. In the top of the package manager, click on packages and go to Unity Registry. Scroll down until you find mlagents and install the pacakge.
 After mlagents is installed in Unity, you can create a new gameobject and go to add component and you should see an Mlagents tab. This confirms that you have successfully installed mlagents. 
 
 Now that mlagents is installed correctly, you will want to create a floor, a sphere, four cubes and a capsule. The sphere will be used as a goal or collectable, the capsule will be used as the agent and the cubes will be stretched out to be walls around the floor. 
 
-For the capsule agent, you will want to go to Add Component and add the Behavior Parameters, Decision Requester, rigidbody and a new script called Collect. (I named my script Collect, but this will be the main goal of the agent, to collect the sphere)
+For the capsule agent, you will want to go to Add Component and add the Behavior Parameters, Decision Requester, rigidbody and a new script called Collect. (I named my script Collect, but this will be the main goal of the agent, to collect the sphere). 
 
 In the Behavior Parameters you'll want to change the Behavior Name to whatever you named the new script above (Mine is changed to Collect). You will want to change the Space Size to 6 as it will take in values of the x, y, and z coordinates. Finally, you will want to change the continous Actions to 2 since we will be taking in data from the x and z coordinates. 
 
 Once this has been completed, refer to the collect script to understand how it works. 
+
 Once the Collect script has been made, you will want to right click on your assets and create two new materials. You can choose any color, but one material will be used for a winning floor and the other will be used for a losing floor. You will want to click and drag the materials to either the win or lose part of the collect script. Ontop of this, you will want to drag your sphere into the Target part of the collect script and your floor into the Floor part of the Collect script. 
 Now we will go to the sphere collectable. Click on the sphere and go to add component, new script and name it as Goal. This is important as the Goal script will be used as a name tag so the Agent knows when it collides with it. 
 Similar to the step above, you will want to go to each of your walls, Add Component, new script and name it Wall. This will be used so the agent knows that when it hits a wall, negative reinforcement occurs. 

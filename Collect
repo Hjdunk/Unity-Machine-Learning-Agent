@@ -1,0 +1,80 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Unity.MLAgents;
+using Unity.MLAgents.Actuators;
+using Unity.MLAgents.Sensors;
+
+public class Collect : Agent
+{
+    [SerializeField]
+    private Transform target;
+    float x;
+    float z;
+    float speed = 5f;
+    [SerializeField]
+    private Material win;
+    [SerializeField]
+    private Material lose;
+    [SerializeField]
+    private MeshRenderer floor;
+
+    //You can use transform.position to get the position of the agent
+    //but since we have multiple agents, localPosition is used to set the position of
+    //wherever the agent is 
+    public override void OnEpisodeBegin()
+    {
+        //Used for resetting to bsae position
+        //transform.localPosition = Vector3.zero;
+        transform.localPosition = new Vector3(Random.Range(-6f, 6.3f), 0, Random.Range(-6.3f, -1f));
+        target.localPosition = new Vector3(Random.Range(-6f, 6.3f), 0, Random.Range(1.6f, 6.3f));
+    }
+
+
+    //How the agents views the environments. we need to move character to the collectable
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        sensor.AddObservation(transform.localPosition);//users position
+        sensor.AddObservation(target.localPosition);//position of the collectable
+    } 
+    //In terms of Space Size for machine learning, we are using Vector3 which calculates
+    //x, y, and z positions. Considering that we have 2 different objects that need
+    //to have their x, y, and z cooridnates observed and collected, we will have space size of 6
+
+    //Takes actions as either a float or an int. Only works with numbers
+    public override void OnActionReceived(ActionBuffers actions)
+    {
+        x = actions.ContinuousActions[0];
+        z = actions.ContinuousActions[1];
+        transform.localPosition += new Vector3(x, 0, z) * Time.deltaTime * speed;
+    }
+    
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        ActionSegment<float> actions = actionsOut.ContinuousActions;
+        actions[0] = Input.GetAxisRaw("Horizontal");
+        actions[1] = Input.GetAxisRaw("Vertical");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //This can be used as a tag system for spceific objects
+        //or you can use the CompareTag feature
+        if (other.TryGetComponent<Goal>(out Goal goal))
+        {
+            SetReward(+1f);
+            floor.material = win;
+            EndEpisode();
+        }
+        if(other.TryGetComponent<Wall>(out Wall wall))
+        {
+            SetReward(-1f); //used to give the agent a reward
+            floor.material = lose;
+            EndEpisode(); //Game doesn't quit, but the game resets
+        }
+        
+    }
+
+
+
+}
